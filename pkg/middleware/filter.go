@@ -27,6 +27,7 @@ func NewFilterMiddleware(mf *module.Filter, upstreamEndpoint string) mux.Middlew
 			if err != nil {
 				ver = ""
 			}
+			//如果设置FilterConfig会进入module.Direct
 			rule := mf.Rule(mod, ver)
 			switch rule {
 			case module.Exclude:

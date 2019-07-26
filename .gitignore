@@ -31,3 +31,6 @@ cmd/proxy/bin
 
 # prod config file
 config.toml
+
+vendor
+athens

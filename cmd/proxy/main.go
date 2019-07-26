@@ -32,7 +32,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("could not load config file: %v", err)
 	}
-
+	conf.GoProxy = "https://goproxy.io"
 	handler, err := actions.App(conf)
 	if err != nil {
 		log.Fatal(err)

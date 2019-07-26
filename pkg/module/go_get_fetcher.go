@@ -5,6 +5,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -106,16 +107,62 @@ func downloadModule(goBinaryName, goProxy string, fs afero.Fs, gopath, repoRoot,
 	uri := strings.TrimSuffix(module, "/")
 	fullURI := fmt.Sprintf("%s@%s", uri, version)
 
+	if strings.Contains(module,"git.sankuai"){
+		goProxy = ""
+	}
+
+	logrus.Infof("downloadModule:%+v,proxy:%+v",fullURI,goProxy)
+
+	{
+		cmd := exec.Command("git","config","--list")
+
+		stdout := &bytes.Buffer{}
+		stderr := &bytes.Buffer{}
+		cmd.Stdout = stdout
+		cmd.Stderr = stderr
+		cmd.Run()
+		logrus.Infof("git exec:%+v",stdout)
+	}
+
+	//{
+	//	cmd := exec.Command("go","get","-u","-v","git.sankuai.com/myinf/inf-env-go.git")
+	//
+	//	stdout := &bytes.Buffer{}
+	//	stderr := &bytes.Buffer{}
+	//	cmd.Stdout = stdout
+	//	cmd.Stderr = stderr
+	//	err := cmd.Run()
+	//
+	//	logrus.Infof("go exec stdout:%+v",stdout)
+	//	logrus.Info("-----")
+	//	logrus.Infof("go exec stderr:%+v",stderr)
+	//	logrus.Info("-----")
+	//	logrus.Infof("go exec err:%+v",err)
+	//}
+
+
+
+	//fullURI形式 git.sankuai.com/myinf/inf-env-go.git@v0.0.7
+	//go mod download -json git.sankuai.com/myinf/inf-env-go.git@v0.0.7
 	cmd := exec.Command(goBinaryName, "mod", "download", "-json", fullURI)
 	cmd.Env = prepareEnv(gopath, goProxy)
+	logrus.Info("cmd env:%+v",cmd.Env)
 	cmd.Dir = repoRoot
 	stdout := &bytes.Buffer{}
 	stderr := &bytes.Buffer{}
 	cmd.Stdout = stdout
 	cmd.Stderr = stderr
+
+	logrus.Infof("start exec go mod download:%+v",fullURI)
+
 	err := cmd.Run()
+	logrus.Info("-----")
+	logrus.Infof("go mod download exec stdout:%+v",stdout)
+	logrus.Info("-----")
+
 	if err != nil {
 		err = fmt.Errorf("%v: %s", err, stderr)
+		logrus.Infof("go mod download exec err:%+v",err)
 		var m goModule
 		if jsonErr := json.NewDecoder(stdout).Decode(&m); jsonErr != nil {
 			return goModule{}, errors.E(op, err)

@@ -152,7 +152,7 @@ func (p *protocol) Latest(ctx context.Context, mod string) (*storage.RevInfo, er
 
 	return lr, nil
 }
-
+// 处理info，如果文件不存在，则进行下载
 func (p *protocol) Info(ctx context.Context, mod, ver string) ([]byte, error) {
 	const op errors.Op = "protocol.Info"
 	ctx, span := observ.StartSpan(ctx, op.String())
@@ -205,7 +205,8 @@ func (p *protocol) Zip(ctx context.Context, mod, ver string) (io.ReadCloser, err
 
 	return zip, nil
 }
-
+//mod google.golang.org/grpc
+//ver v1.18.0
 func (p *protocol) processDownload(ctx context.Context, mod, ver string, f func(newVer string) error) error {
 	const op errors.Op = "protocol.processDownload"
 	switch p.df.Match(mod) {
