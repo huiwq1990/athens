@@ -1,5 +1,5 @@
 #Athens程序运行时依赖下载
-
+#git clone -b hg https://github.com/huiwq1990/athens.git
 ps -ef |grep athens2 | grep -v "grep" | awk '{print $2}' | xargs kill -9
 rm -rf athens2
 rm -rf hg.yaml
