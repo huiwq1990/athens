@@ -16,6 +16,7 @@ go build -mod=vendor -o athens cmd/proxy/main.go
 
 #由于下载内部包时，不需要使用代理，所以直接使用git
 git config --global url."git@git.sankuai.com:".insteadOf "https://git.sankuai.com/"
+git config --global url."ssh://git@git.dianpingoa.com/".insteadOf "https://dianpingoa.com/"
 
 cp ./athens ../athens2
 cp ./hg.yaml ../
