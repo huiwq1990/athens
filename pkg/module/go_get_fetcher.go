@@ -111,6 +111,10 @@ func downloadModule(goBinaryName, goProxy string, fs afero.Fs, gopath, repoRoot,
 		goProxy = ""
 	}
 
+	if strings.Contains(module,"dianpingoa.com"){
+		goProxy = ""
+	}
+
 	if strings.Contains(module,"dianping.oa"){
 		goProxy = ""
 	}
