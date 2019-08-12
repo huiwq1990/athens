@@ -110,6 +110,10 @@ func downloadModule(goBinaryName, goProxy string, fs afero.Fs, gopath, repoRoot,
 	if strings.Contains(module,"git.sankuai"){
 		goProxy = ""
 	}
+	
+	if strings.Contains(module,"dianping.oa"){
+		goProxy = ""
+	}
 
 	logrus.Infof("downloadModule:%+v,proxy:%+v",fullURI,goProxy)
 
