@@ -5,7 +5,9 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"os/exec"
+	"strings"
 	"time"
 
 	"github.com/gomods/athens/pkg/config"
@@ -27,7 +29,7 @@ type vcsLister struct {
 	goProxy   string
 	fs        afero.Fs
 }
-
+//mod git.dianpingoa.com/arch/gocat.git
 func (l *vcsLister) List(ctx context.Context, mod string) (*storage.RevInfo, []string, error) {
 	const op errors.Op = "vcsLister.List"
 	ctx, span := observ.StartSpan(ctx, op.String())
@@ -55,7 +57,18 @@ func (l *vcsLister) List(ctx context.Context, mod string) (*storage.RevInfo, []s
 		return nil, nil, errors.E(op, err)
 	}
 	defer clearFiles(l.fs, gopath)
-	cmd.Env = prepareEnv(gopath, l.goProxy)
+
+	var goProxy = l.goProxy
+	if strings.Contains(mod,"git.sankuai") {
+		goProxy = ""
+	}
+
+	if strings.Contains(mod,"dianpingoa.com"){
+		goProxy = ""
+	}
+	logrus.Infof("go list preexec, mod:%+v, proxy:%+v",mod,goProxy)
+
+	cmd.Env = prepareEnv(gopath, goProxy)
 
 	err = cmd.Run()
 	if err != nil {
